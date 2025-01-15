@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    container_name: pet_management_postgres
+    restart: always
+    environment:
+      - POSTGRESQL_USERNAME=admin
+      - POSTGRESQL_PASSWORD=adminpassword
+      - POSTGRESQL_DATABASE=pet_management
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/bitnami/postgresql
+volumes:
+  postgres_data:
