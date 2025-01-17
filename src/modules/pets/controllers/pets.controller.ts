@@ -8,11 +8,12 @@ import {
   Param,
   UseGuards,
   Request,
+  BadRequestException,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { PetsService } from '../services/pets.service';
 import { CreatePetDto } from '../dtos/create-pet.dto';
-import { UpdatePetDto, UpdatePetSchema } from '../dtos/update-pet.dto';
+import { UpdatePetDto } from '../dtos/update-pet.dto';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 
 @Controller('pets')
 @UseGuards(JwtAuthGuard)
@@ -20,13 +21,16 @@ export class PetsController {
   constructor(private readonly petsService: PetsService) {}
 
   @Post()
-  async createPet(@Body() createPetDto: CreatePetDto, @Request() req: any) {
+  async createPet(
+    @Body() createPetDto: CreatePetDto,
+    @Request() req: { user: { id: string } },
+  ) {
     const userId = req.user.id;
     return this.petsService.createPet({ ...createPetDto, userId });
   }
 
   @Get()
-  async findAllPets(@Request() req: any) {
+  async findAllPets(@Request() req: { user: { id: string } }) {
     const userId = req.user.id;
     return this.petsService.findAllPets(userId);
   }
@@ -34,10 +38,14 @@ export class PetsController {
   @Patch(':id')
   async updatePet(
     @Param('id') id: string,
-    @Body() body: Partial<UpdatePetDto>,
+    @Body() updatePetDto: Partial<UpdatePetDto>,
   ) {
-    const parsedData = UpdatePetSchema.parse(body);
-    return this.petsService.updatePet(id, parsedData);
+    if (!Object.keys(updatePetDto).length) {
+      throw new BadRequestException(
+        'O corpo da requisição não pode estar vazio.',
+      );
+    }
+    return this.petsService.updatePet(id, updatePetDto);
   }
 
   @Delete(':id')

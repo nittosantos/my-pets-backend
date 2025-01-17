@@ -1,40 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { Pet } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreatePetDto } from '../dtos/create-pet.dto';
+import { UpdatePetDto } from '../dtos/update-pet.dto';
 
 @Injectable()
 export class PetsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createPet(data: {
-    name: string;
-    type: string;
-    breed?: string;
-    age?: number;
-    userId: string;
-  }) {
+  async createPet(data: CreatePetDto & { userId: string }) {
+    const { userId, ...rest } = data;
     return this.prisma.pet.create({
       data: {
-        name: data.name,
-        type: data.type,
-        breed: data.breed,
-        age: data.age,
+        ...rest,
         user: {
-          connect: {
-            id: data.userId,
-          },
+          connect: { id: userId },
         },
       },
     });
   }
 
   async findAllPets(userId: string): Promise<Pet[]> {
-    return this.prisma.pet.findMany({
-      where: { userId },
-    });
+    return this.prisma.pet.findMany({ where: { userId } });
   }
 
-  async updatePet(id: string, data: Partial<Pet>): Promise<Pet> {
+  async updatePet(id: string, data: UpdatePetDto): Promise<Pet> {
     return this.prisma.pet.update({
       where: { id },
       data,
@@ -42,8 +32,6 @@ export class PetsService {
   }
 
   async deletePet(id: string): Promise<Pet> {
-    return this.prisma.pet.delete({
-      where: { id },
-    });
+    return this.prisma.pet.delete({ where: { id } });
   }
 }

@@ -9,4 +9,8 @@ export const UpdatePetSchema = z.object({
   age: z.number().int().nonnegative().optional(),
 });
 
-export type UpdatePetDto = z.infer<typeof UpdatePetSchema>;
+export class UpdatePetDto {
+  static schema = UpdatePetSchema;
+}
+
+export type UpdatePetDtoType = z.infer<typeof UpdatePetSchema>;

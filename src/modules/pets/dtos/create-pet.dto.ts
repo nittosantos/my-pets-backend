@@ -7,4 +7,8 @@ export const CreatePetSchema = z.object({
   age: z.number().int().nonnegative().optional(),
 });
 
-export type CreatePetDto = z.infer<typeof CreatePetSchema>;
+export class CreatePetDto {
+  static schema = CreatePetSchema;
+}
+
+export type CreatePetDtoType = z.infer<typeof CreatePetSchema>;
