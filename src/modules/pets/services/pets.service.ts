@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
 import { Pet } from '@prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class PetsService {
@@ -12,9 +12,19 @@ export class PetsService {
     breed?: string;
     age?: number;
     userId: string;
-  }): Promise<Pet> {
+  }) {
     return this.prisma.pet.create({
-      data,
+      data: {
+        name: data.name,
+        type: data.type,
+        breed: data.breed,
+        age: data.age,
+        user: {
+          connect: {
+            id: data.userId,
+          },
+        },
+      },
     });
   }
 
