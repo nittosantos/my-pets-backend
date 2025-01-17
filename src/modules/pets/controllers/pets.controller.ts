@@ -9,7 +9,7 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { PetsService } from '../services/pets.service';
 import { CreatePetDto } from '../dtos/create-pet.dto';
 import { UpdatePetDto, UpdatePetSchema } from '../dtos/update-pet.dto';
