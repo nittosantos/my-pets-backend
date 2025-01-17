@@ -11,8 +11,8 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PetsService } from '../services/pets.service';
-import { CreatePetDto } from '../dtos/create-pet.dto';
-import { UpdatePetDto } from '../dtos/update-pet.dto';
+import { CreatePetDtoType } from '../dtos/create-pet.dto';
+import { UpdatePetDtoType } from '../dtos/update-pet.dto';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 
 @Controller('pets')
@@ -22,7 +22,7 @@ export class PetsController {
 
   @Post()
   async createPet(
-    @Body() createPetDto: CreatePetDto,
+    @Body() createPetDto: CreatePetDtoType,
     @Request() req: { user: { id: string } },
   ) {
     const userId = req.user.id;
@@ -38,7 +38,7 @@ export class PetsController {
   @Patch(':id')
   async updatePet(
     @Param('id') id: string,
-    @Body() updatePetDto: Partial<UpdatePetDto>,
+    @Body() updatePetDto: Partial<UpdatePetDtoType>,
   ) {
     if (!Object.keys(updatePetDto).length) {
       throw new BadRequestException(
