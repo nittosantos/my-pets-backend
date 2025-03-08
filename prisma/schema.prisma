@@ -23,14 +23,29 @@ model User {
 }
 
 model Pet {
-  id        String   @id @default(uuid())
-  name      String
-  type      String
-  breed     String?
-  age       Int?
-  createdAt DateTime @default(now())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  id           String        @id @default(uuid())
+  name         String
+  type         String
+  breed        String?
+  age          Int?
+  createdAt    DateTime      @default(now())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  appointments Appointment[]
 
   @@index([userId])
+}
+
+model Appointment {
+  id        String   @id @default(uuid())
+  date      DateTime
+  vetName   String
+  reason    String
+  notes     String?
+  status    String   @default("scheduled") // 'scheduled', 'completed', 'canceled'
+  petId     String
+  pet       Pet      @relation(fields: [petId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([petId])
 }
