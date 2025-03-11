@@ -4,6 +4,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './modules/users/users.module';
 import { PetsModule } from './modules/pets/pets.module';
+import { AppointmentsModule } from './modules/appointments/appointments.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -11,6 +12,7 @@ import { PetsModule } from './modules/pets/pets.module';
     UsersModule,
     PrismaModule,
     PetsModule,
+    AppointmentsModule,
   ],
 })
 export class AppModule {}

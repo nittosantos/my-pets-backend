@@ -23,15 +23,15 @@ export class PetsController {
   @Post()
   async createPet(
     @Body() createPetDto: CreatePetDtoType,
-    @Request() req: { user: { id: string } },
+    @Request() req: { user: { userId: string } },
   ) {
-    const userId = req.user.id;
+    const userId = req.user.userId;
     return this.petsService.createPet({ ...createPetDto, userId });
   }
 
   @Get()
-  async findAllPets(@Request() req: { user: { id: string } }) {
-    const userId = req.user.id;
+  async findAllPets(@Request() req: { user: { userId: string } }) {
+    const userId = req.user.userId;
     return this.petsService.findAllPets(userId);
   }
 
