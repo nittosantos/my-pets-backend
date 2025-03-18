@@ -13,6 +13,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Recurrence {
+  once
+  daily
+  weekly
+  monthly
+}
+
+enum TaskStatus {
+  pending
+  completed
+  canceled
+}
+
+enum AppointmentStatus {
+  scheduled
+  completed
+  canceled
+}
+
+enum PetType {
+  dog
+  cat
+  bird
+  other
+}
+
 model User {
   id        String   @id @default(uuid())
   name      String
@@ -25,27 +51,42 @@ model User {
 model Pet {
   id           String        @id @default(uuid())
   name         String
-  type         String
+  type         PetType
   breed        String?
   age          Int?
   createdAt    DateTime      @default(now())
   userId       String
   user         User          @relation(fields: [userId], references: [id])
   appointments Appointment[]
+  tasks        Task[]
 
   @@index([userId])
 }
 
 model Appointment {
-  id        String   @id @default(uuid())
+  id        String            @id @default(uuid())
   date      DateTime
   vetName   String
   reason    String
   notes     String?
-  status    String   @default("scheduled") // 'scheduled', 'completed', 'canceled'
+  status    AppointmentStatus @default(scheduled)
   petId     String
-  pet       Pet      @relation(fields: [petId], references: [id])
-  createdAt DateTime @default(now())
+  pet       Pet               @relation(fields: [petId], references: [id])
+  createdAt DateTime          @default(now())
+
+  @@index([petId])
+}
+
+model Task {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  date        DateTime
+  recurrence  Recurrence @default(once)
+  status      TaskStatus @default(pending)
+  petId       String
+  pet         Pet        @relation(fields: [petId], references: [id])
+  createdAt   DateTime   @default(now())
 
   @@index([petId])
 }
